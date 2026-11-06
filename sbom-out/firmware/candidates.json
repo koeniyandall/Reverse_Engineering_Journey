@@ -1,0 +1,84 @@
+{
+  "binary": "/Users/keoniyandall/Senior_Project/ground-truth/out/v1.2.13/firmware.elf",
+  "model": "claude-sonnet-5-5",
+  "generated": "2026-11-06T16:03:22.175707+00:00",
+  "chunks": 1,
+  "strings_total": 200,
+  "strings_trimmed": 0,
+  "usage": {
+    "input": 99044,
+    "output": 839,
+    "cache_read": 0
+  },
+  "candidates": [
+    {
+      "name": "newlib (nano)",
+      "version": "4.4.0.20231231",
+      "type": "library",
+      "confidence": "high",
+      "evidence": [
+        {
+          "kind": "string",
+          "value": "/build/newlib-38V0JC/newlib-4.4.0.20231231/newlib/libc/include"
+        },
+        {
+          "kind": "string",
+          "value": "/build/newlib-38V0JC/newlib-4.4.0.20231231/build_nano/arm-none-eabi/thumb/v7e-m/nofp/newlib"
+        },
+        {
+          "kind": "string",
+          "value": "memset.c, memcmp.c, memcpy-armv7m.S, libc_a-memcpy.o"
+        },
+        {
+          "kind": "function",
+          "value": "memset, memcpy, memcmp",
+          "location": "decompiled"
+        }
+      ],
+      "purl": "",
+      "license": "",
+      "version_notes": "Only string functions (memset/memcpy/memcmp) linked; from Debian/Ubuntu libnewlib-arm-none-eabi package, built with GCC 13.2.1."
+    },
+    {
+      "name": "zlib",
+      "version": "1.2.13",
+      "type": "library",
+      "confidence": "high",
+      "evidence": [
+        {
+          "kind": "string",
+          "value": "pG1.2.13",
+          "location": "strings (ZLIB_VERSION)"
+        },
+        {
+          "kind": "string",
+          "value": "incorrect header check"
+        },
+        {
+          "kind": "string",
+          "value": "invalid distance too far back"
+        },
+        {
+          "kind": "string",
+          "value": "incompatible version"
+        },
+        {
+          "kind": "function",
+          "value": "deflateInit2_, inflateInit2_, inflate_table, _tr_flush_block, compress2, uncompress2, adler32_z, crc32_z",
+          "location": "decompiled"
+        },
+        {
+          "kind": "string",
+          "value": "deflate.c, inflate.c, inffast.c, inftrees.c, trees.c, zutil.c, uncompr.c, compress.c, adler32.c, crc32.c"
+        }
+      ],
+      "purl": "pkg:generic/zlib@1.2.13",
+      "license": "Zlib",
+      "version_notes": "Version string 1.2.13 embedded; deflateInit_ checks first char '1' and stream size 0x38."
+    }
+  ],
+  "notes": [
+    "Small test firmware: main compresses/uncompresses a 256-byte buffer with zlib and compares. Toolchain is arm-none-eabi GCC 13.2.1 (not reported separately; no libgcc code evident). Reset_Handler/vector_table are custom startup code."
+  ],
+  "errors": []
+}

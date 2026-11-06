@@ -1,0 +1,101 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:6fa8ae76-1a5f-43bd-9696-6d7af2499f33",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-06T16:03:22.176128+00:00",
+    "component": {
+      "type": "firmware",
+      "name": "firmware.elf"
+    },
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "sbom_candidates.py"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "newlib (nano)",
+      "properties": [
+        {
+          "name": "sbom:confidence",
+          "value": "high"
+        }
+      ],
+      "version": "4.4.0.20231231",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "/build/newlib-38V0JC/newlib-4.4.0.20231231/newlib/libc/include",
+            "additionalContext": "string: /build/newlib-38V0JC/newlib-4.4.0.20231231/newlib/libc/include"
+          },
+          {
+            "location": "/build/newlib-38V0JC/newlib-4.4.0.20231231/build_nano/arm-none-eabi/thumb/v7e-m/nofp/newlib",
+            "additionalContext": "string: /build/newlib-38V0JC/newlib-4.4.0.20231231/build_nano/arm-none-eabi/thumb/v7e-m/nofp/newlib"
+          },
+          {
+            "location": "memset.c, memcmp.c, memcpy-armv7m.S, libc_a-memcpy.o",
+            "additionalContext": "string: memset.c, memcmp.c, memcpy-armv7m.S, libc_a-memcpy.o"
+          },
+          {
+            "location": "decompiled",
+            "additionalContext": "function: memset, memcpy, memcmp"
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "name": "zlib",
+      "properties": [
+        {
+          "name": "sbom:confidence",
+          "value": "high"
+        }
+      ],
+      "version": "1.2.13",
+      "purl": "pkg:generic/zlib@1.2.13",
+      "licenses": [
+        {
+          "license": {
+            "id": "Zlib"
+          }
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "strings (ZLIB_VERSION)",
+            "additionalContext": "string: pG1.2.13"
+          },
+          {
+            "location": "incorrect header check",
+            "additionalContext": "string: incorrect header check"
+          },
+          {
+            "location": "invalid distance too far back",
+            "additionalContext": "string: invalid distance too far back"
+          },
+          {
+            "location": "incompatible version",
+            "additionalContext": "string: incompatible version"
+          },
+          {
+            "location": "decompiled",
+            "additionalContext": "function: deflateInit2_, inflateInit2_, inflate_table, _tr_flush_block, compress2, uncompress2, adler32_z, crc32_z"
+          },
+          {
+            "location": "deflate.c, inflate.c, inffast.c, inftrees.c, trees.c, zutil.c, uncompr.c, compress.c, adler32.c, crc32.c",
+            "additionalContext": "string: deflate.c, inflate.c, inffast.c, inftrees.c, trees.c, zutil.c, uncompr.c, compress.c, adler32.c, crc32.c"
+          }
+        ]
+      }
+    }
+  ]
+}
