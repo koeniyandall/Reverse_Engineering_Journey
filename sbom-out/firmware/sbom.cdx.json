@@ -1,13 +1,13 @@
 {
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:6fa8ae76-1a5f-43bd-9696-6d7af2499f33",
+  "serialNumber": "urn:uuid:dbbc2824-939a-4349-a15c-a2cf83b5af82",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-11-06T16:03:22.176128+00:00",
+    "timestamp": "2026-11-11T17:43:10.414459+00:00",
     "component": {
       "type": "firmware",
-      "name": "firmware.elf"
+      "name": "firmware.bin"
     },
     "tools": {
       "components": [
@@ -21,78 +21,82 @@
   "components": [
     {
       "type": "library",
-      "name": "newlib (nano)",
+      "name": "littlefs",
       "properties": [
         {
           "name": "sbom:confidence",
           "value": "high"
         }
       ],
-      "version": "4.4.0.20231231",
       "evidence": {
         "occurrences": [
           {
-            "location": "/build/newlib-38V0JC/newlib-4.4.0.20231231/newlib/libc/include",
-            "additionalContext": "string: /build/newlib-38V0JC/newlib-4.4.0.20231231/newlib/libc/include"
+            "location": "strings (superblock magic)",
+            "additionalContext": "string: littlefs"
           },
           {
-            "location": "/build/newlib-38V0JC/newlib-4.4.0.20231231/build_nano/arm-none-eabi/thumb/v7e-m/nofp/newlib",
-            "additionalContext": "string: /build/newlib-38V0JC/newlib-4.4.0.20231231/build_nano/arm-none-eabi/thumb/v7e-m/nofp/newlib"
+            "location": "FUN_08005a2c",
+            "additionalContext": "function: lfs_mount-like (disk version check returning -0x16, superblock/gstate handling)"
           },
           {
-            "location": "memset.c, memcmp.c, memcpy-armv7m.S, libc_a-memcpy.o",
-            "additionalContext": "string: memset.c, memcmp.c, memcpy-armv7m.S, libc_a-memcpy.o"
+            "location": "FUN_080058c4",
+            "additionalContext": "function: lfs_format-like"
           },
           {
-            "location": "decompiled",
-            "additionalContext": "function: memset, memcpy, memcmp"
+            "location": "FUN_08002020, FUN_080016d4, FUN_0800381c",
+            "additionalContext": "function: lfs_dir_commit / lfs_dir_fetchmatch / lfs_dir_traverse / lfs_dir_compact"
+          },
+          {
+            "location": "FUN_08000130",
+            "additionalContext": "code_pattern: CRC32 nibble-table (16-entry) implementation, lfs_crc"
+          },
+          {
+            "location": "FUN_0800443a, FUN_0800451e, FUN_0800472c, FUN_0800022a/FUN_0800024c/FUN_08000264, FUN_080002c0",
+            "additionalContext": "code_pattern: CTZ skip-list helpers (lfs_ctz_find/extend/traverse), lfs_npw2/ctz/popcount, lfs_fromle32 byte swap"
+          },
+          {
+            "location": "throughout",
+            "additionalContext": "code_pattern: LFS_ERR_CORRUPT -0x54, LFS_ERR_NOENT -2, LFS_ERR_NOSPC -0x1c, LFS_ERR_NOMEM -0xc(-0xf4)"
           }
         ]
       }
     },
     {
       "type": "library",
-      "name": "zlib",
+      "name": "libgcc (ARM integer division helper)",
       "properties": [
         {
           "name": "sbom:confidence",
-          "value": "high"
-        }
-      ],
-      "version": "1.2.13",
-      "purl": "pkg:generic/zlib@1.2.13",
-      "licenses": [
-        {
-          "license": {
-            "id": "Zlib"
-          }
+          "value": "low"
         }
       ],
       "evidence": {
         "occurrences": [
           {
-            "location": "strings (ZLIB_VERSION)",
-            "additionalContext": "string: pG1.2.13"
+            "location": "FUN_08006a8c",
+            "additionalContext": "function: unrolled shift-subtract unsigned divide (__aeabi_uidivmod-style) with div-by-zero hook"
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "name": "newlib (C runtime: malloc/free/string functions)",
+      "properties": [
+        {
+          "name": "sbom:confidence",
+          "value": "low"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "FUN_08006cc0, FUN_08006eb4, FUN_08006c7c, FUN_08006f48",
+            "additionalContext": "function: _malloc_r / _free_r / _sbrk_r style free-list allocator (sbrk growth, errno=0xc)"
           },
           {
-            "location": "incorrect header check",
-            "additionalContext": "string: incorrect header check"
-          },
-          {
-            "location": "invalid distance too far back",
-            "additionalContext": "string: invalid distance too far back"
-          },
-          {
-            "location": "incompatible version",
-            "additionalContext": "string: incompatible version"
-          },
-          {
-            "location": "decompiled",
-            "additionalContext": "function: deflateInit2_, inflateInit2_, inflate_table, _tr_flush_block, compress2, uncompress2, adler32_z, crc32_z"
-          },
-          {
-            "location": "deflate.c, inflate.c, inffast.c, inftrees.c, trees.c, zutil.c, uncompr.c, compress.c, adler32.c, crc32.c",
-            "additionalContext": "string: deflate.c, inflate.c, inffast.c, inftrees.c, trees.c, zutil.c, uncompr.c, compress.c, adler32.c, crc32.c"
+            "location": "FUN_08006de0, FUN_08006dfc, FUN_08006e94, FUN_08006ea6, FUN_08006e0c, FUN_08006e28, FUN_08006e4a",
+            "additionalContext": "function: memcmp, memset, memcpy, strlen, strchr, strcspn, strspn implementations"
           }
         ]
       }

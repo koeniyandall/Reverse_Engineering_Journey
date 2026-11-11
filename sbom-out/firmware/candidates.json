@@ -1,84 +1,93 @@
 {
-  "binary": "/Users/keoniyandall/Senior_Project/ground-truth/out/v1.2.13/firmware.elf",
+  "binary": "/Users/keoniyandall/Senior_Project/ground-truth/out/littlefs-v2.9.3/cortex-m0-O0/firmware.bin",
   "model": "claude-sonnet-5-5",
-  "generated": "2026-11-06T16:03:22.175707+00:00",
+  "generated": "2026-11-11T17:43:10.413306+00:00",
   "chunks": 1,
-  "strings_total": 200,
+  "strings_total": 96,
   "strings_trimmed": 0,
   "usage": {
-    "input": 99044,
-    "output": 839,
+    "input": 71472,
+    "output": 1963,
     "cache_read": 0
   },
   "candidates": [
     {
-      "name": "newlib (nano)",
-      "version": "4.4.0.20231231",
+      "name": "littlefs",
+      "version": "",
       "type": "library",
       "confidence": "high",
       "evidence": [
         {
           "kind": "string",
-          "value": "/build/newlib-38V0JC/newlib-4.4.0.20231231/newlib/libc/include"
-        },
-        {
-          "kind": "string",
-          "value": "/build/newlib-38V0JC/newlib-4.4.0.20231231/build_nano/arm-none-eabi/thumb/v7e-m/nofp/newlib"
-        },
-        {
-          "kind": "string",
-          "value": "memset.c, memcmp.c, memcpy-armv7m.S, libc_a-memcpy.o"
+          "value": "littlefs",
+          "location": "strings (superblock magic)"
         },
         {
           "kind": "function",
-          "value": "memset, memcpy, memcmp",
-          "location": "decompiled"
+          "value": "lfs_mount-like (disk version check returning -0x16, superblock/gstate handling)",
+          "location": "FUN_08005a2c"
+        },
+        {
+          "kind": "function",
+          "value": "lfs_format-like",
+          "location": "FUN_080058c4"
+        },
+        {
+          "kind": "function",
+          "value": "lfs_dir_commit / lfs_dir_fetchmatch / lfs_dir_traverse / lfs_dir_compact",
+          "location": "FUN_08002020, FUN_080016d4, FUN_0800381c"
+        },
+        {
+          "kind": "code_pattern",
+          "value": "CRC32 nibble-table (16-entry) implementation, lfs_crc",
+          "location": "FUN_08000130"
+        },
+        {
+          "kind": "code_pattern",
+          "value": "CTZ skip-list helpers (lfs_ctz_find/extend/traverse), lfs_npw2/ctz/popcount, lfs_fromle32 byte swap",
+          "location": "FUN_0800443a, FUN_0800451e, FUN_0800472c, FUN_0800022a/FUN_0800024c/FUN_08000264, FUN_080002c0"
+        },
+        {
+          "kind": "code_pattern",
+          "value": "LFS_ERR_CORRUPT -0x54, LFS_ERR_NOENT -2, LFS_ERR_NOSPC -0x1c, LFS_ERR_NOMEM -0xc(-0xf4)",
+          "location": "throughout"
         }
-      ],
-      "purl": "",
-      "license": "",
-      "version_notes": "Only string functions (memset/memcpy/memcmp) linked; from Debian/Ubuntu libnewlib-arm-none-eabi package, built with GCC 13.2.1."
+      ]
     },
     {
-      "name": "zlib",
-      "version": "1.2.13",
+      "name": "libgcc (ARM integer division helper)",
+      "version": "",
       "type": "library",
-      "confidence": "high",
+      "confidence": "low",
       "evidence": [
         {
-          "kind": "string",
-          "value": "pG1.2.13",
-          "location": "strings (ZLIB_VERSION)"
-        },
+          "kind": "function",
+          "value": "unrolled shift-subtract unsigned divide (__aeabi_uidivmod-style) with div-by-zero hook",
+          "location": "FUN_08006a8c"
+        }
+      ]
+    },
+    {
+      "name": "newlib (C runtime: malloc/free/string functions)",
+      "version": "",
+      "type": "library",
+      "confidence": "low",
+      "evidence": [
         {
-          "kind": "string",
-          "value": "incorrect header check"
-        },
-        {
-          "kind": "string",
-          "value": "invalid distance too far back"
-        },
-        {
-          "kind": "string",
-          "value": "incompatible version"
+          "kind": "function",
+          "value": "_malloc_r / _free_r / _sbrk_r style free-list allocator (sbrk growth, errno=0xc)",
+          "location": "FUN_08006cc0, FUN_08006eb4, FUN_08006c7c, FUN_08006f48"
         },
         {
           "kind": "function",
-          "value": "deflateInit2_, inflateInit2_, inflate_table, _tr_flush_block, compress2, uncompress2, adler32_z, crc32_z",
-          "location": "decompiled"
-        },
-        {
-          "kind": "string",
-          "value": "deflate.c, inflate.c, inffast.c, inftrees.c, trees.c, zutil.c, uncompr.c, compress.c, adler32.c, crc32.c"
+          "value": "memcmp, memset, memcpy, strlen, strchr, strcspn, strspn implementations",
+          "location": "FUN_08006de0, FUN_08006dfc, FUN_08006e94, FUN_08006ea6, FUN_08006e0c, FUN_08006e28, FUN_08006e4a"
         }
-      ],
-      "purl": "pkg:generic/zlib@1.2.13",
-      "license": "Zlib",
-      "version_notes": "Version string 1.2.13 embedded; deflateInit_ checks first char '1' and stream size 0x38."
+      ]
     }
   ],
   "notes": [
-    "Small test firmware: main compresses/uncompresses a 256-byte buffer with zlib and compares. Toolchain is arm-none-eabi GCC 13.2.1 (not reported separately; no libgcc code evident). Reset_Handler/vector_table are custom startup code."
+    "littlefs v2 on-disk format (cfg has block_cycles, cache/lookahead, name_max/file_max/attr_max, metadata_max, and an inline_max field that treats -1 as 0), suggesting a fairly recent v2.x (likely \u22652.6); exact version not determinable from strings. The malloc/free pattern matches newlib (nano-like) but no newlib banner is present. Strings 'fault.log' and 'DTC P0A80' are application-level, not third-party components."
   ],
   "errors": []
 }
